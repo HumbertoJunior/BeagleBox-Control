@@ -1,6 +1,4 @@
-/* ===================================================================
-Description: Ultrasonic sensor reading
-====================================================================*/
+/*Description: Ultrasonic sensor reading */
 
 
 var b = require('bonescript');
