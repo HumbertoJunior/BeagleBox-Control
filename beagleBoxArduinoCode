@@ -1,0 +1,74 @@
+
+int esqA = 5; 
+int esqB = 6; 
+int dirA = 9; 
+int dirB = 10; 
+int vel = 170; // Velocidade dos motores, Range:(0-255)
+int estado = 'i'; // inicia sem atuação nos motores
+int ultimoEstado;
+int flagVelocidade = 0;
+
+void setup() { 
+  Serial.begin(9600); // Comunicação com a Rasp
+  pinMode(dirA, OUTPUT);
+  pinMode(dirB, OUTPUT);
+  pinMode(esqA, OUTPUT);
+  pinMode(esqB, OUTPUT);
+} 
+
+void loop() { 
+  if(Serial.available()>0){ // Espera a raspenviar um dado
+    if (flagVelocidade == 1){
+      estado = ultimoEstado;
+      flagVelocidade = 0;
+    }
+    else{ estado = Serial.read();} // Le o que foi recebido pela Rasp
+  }
+  //Controle 
+  if(estado=='i'){} // OFF
+  if(estado=='w'){ // Frente
+    movimento(vel,vel,0,0);
+  }
+  if(estado=='d'){ // Direita
+    movimento(vel,0,0,vel);
+  }
+  if(estado=='a'){ // Esquerda
+    movimento(0,vel,0,vel);
+  } 
+  if(estado=='x'){ // Ré
+    movimento(0,0,vel,vel);
+  }
+  if(estado=='s'){ // Parado
+    movimento(0,0,0,0);
+  }
+  //Velocidade 
+  if(estado=='q'){ // Aumenta a velocidade dos motores
+    velocidade(+5);
+  }
+  if(estado=='e'){ // Diminui a velocidade dos motores
+    velocidade(-5);
+  }
+}
+
+
+//Funçao para controle dos movimentos Frente, Ré, Direita, Esquerda e Parado
+void movimento(int a,int b,int c,int d) {
+  analogWrite(dirA, a); 
+  analogWrite(esqA, b);
+  analogWrite(dirB, c); 
+  analogWrite(esqB, d);
+  ultimoEstado = estado;
+}
+
+void velocidade(signed int a){
+  if (vel==255){
+    if(a == -5){vel = vel + a}  
+  }
+  else if (vel==0){
+    if(a == +5){vel = vel + a}  
+  }  
+  else{vel = vel + a;}
+  flagVelocidade = 1;
+  Serial.print("Velocidade: ");
+  Serial.println(vel);
+}
