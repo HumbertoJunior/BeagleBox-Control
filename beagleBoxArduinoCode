@@ -17,13 +17,7 @@ void setup() {
 } 
 
 void loop() { 
-  if(Serial.available()>0){ // Espera a raspenviar um dado
-    if (flagVelocidade == 1){
-      estado = ultimoEstado;
-      flagVelocidade = 0;
-    }
-    else{ estado = Serial.read();} // Le o que foi recebido pela Rasp
-  }
+
   //Controle 
   if(estado=='i'){} // OFF
   if(estado=='w'){ // Frente
@@ -68,7 +62,17 @@ void velocidade(signed int a){
     if(a == +5){vel = vel + a}  
   }  
   else{vel = vel + a;}
-  flagVelocidade = 1;
   Serial.print("Velocidade: ");
   Serial.println(vel);
+  estado = ultimoEstado;
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    inChar = (char)Serial.read(); // recebe novo dado até receber \n
+    if (inChar == '\n') {
+      flagSerial = true;
+    }
+    else {estado = inChar;}
+  }
 }
