@@ -22,11 +22,9 @@ void loop() {
   if(estado=='i'){} // OFF
   if(estado=='w'){ // Frente
     movimento(vel,vel,0,0);
-    Serial.println ("FRENTE");
   }
   if(estado=='d'){ // Direita
     movimento(vel,0,0,vel);
-    Serial.println ("Direita");
   }
   if(estado=='a'){ // Esquerda
     movimento(0,vel,0,vel);
@@ -83,4 +81,3 @@ void serialEvent() {
     estado = Serial.read(); // recebe novo dado até receber \n
   }
 }
-
